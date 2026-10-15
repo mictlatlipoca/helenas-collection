@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Helena's Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffe4ef;
+    --bg-dot: #ffc9de;
+    --paper: #fff5f9;
+    --pink: #ff8fb8;
+    --pink-dark: #e0578c;
+    --ink: #5a2340;
+    --sleeve: #ffd6e7;
+    --px: 4px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px);
+    background-size: 16px 16px;
+    color: var(--ink);
+    font-family: "Pixelify Sans", monospace;
+    font-size: 16px;
+    padding: 16px 16px 96px;
+    image-rendering: pixelated;
+  }
+
+  /* chunky pixel border helper */
+  .px-box {
+    background: var(--paper);
+    box-shadow:
+      0 calc(var(--px) * -1) 0 0 var(--ink),
+      0 var(--px) 0 0 var(--ink),
+      calc(var(--px) * -1) 0 0 0 var(--ink),
+      var(--px) 0 0 0 var(--ink),
+      var(--px) calc(var(--px) * 2) 0 0 var(--pink-dark),
+      calc(var(--px) * 2) var(--px) 0 0 var(--pink-dark);
+    margin: var(--px);
+  }
+
+  header {
+    text-align: center;
+    margin: 8px 0 24px;
+  }
+
+  h1 {
+    font-family: "Press Start 2P", monospace;
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--pink-dark);
+    text-shadow: 3px 3px 0 #fff, 6px 6px 0 var(--bg-dot);
+  }
+
+  .subtitle { margin: 8px 0 0; font-size: 15px; }
+
+  .hearts { letter-spacing: 6px; color: var(--pink); }
+
+  main { max-width: 720px; margin: 0 auto; }
+
+  /* ---------- binder ---------- */
+  .binder {
+    position: relative;
+    padding: 16px 12px 16px 28px;
+    background: var(--pink);
+  }
+
+  /* binder rings */
+  .binder::before {
+    content: "";
+    position: absolute;
+    left: 8px; top: 24px; bottom: 24px;
+    width: 10px;
+    background:
+      repeating-linear-gradient(to bottom,
+        var(--ink) 0 4px, #fff 4px 12px, var(--ink) 12px 16px, transparent 16px 64px);
+  }
+
+  .page {
+    background: var(--paper);
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    box-shadow: inset 0 0 0 var(--px) var(--sleeve);
+  }
+
+  .slot {
+    container-type: inline-size;
+    aspect-ratio: 55 / 85;
+    background: var(--sleeve);
+    border: var(--px) solid #fff;
+    outline: 2px dashed var(--pink);
+    outline-offset: -8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    color: var(--pink);
+    padding: 0;
+    cursor: default;
+  }
+
+  .slot.filled {
+    outline: none;
+    cursor: pointer;
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 3px 3px 0 var(--pink-dark);
+    transition: transform .1s steps(2);
+  }
+
+  .slot.filled:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--pink-dark); }
+
+  .slot > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    image-rendering: auto;
+  }
+
+  /* plastic sleeve shine */
+  .slot.filled::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.45) 0 18%, transparent 18% 100%);
+    pointer-events: none;
+  }
+
+  .slot .tag {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: rgba(90, 35, 64, .82);
+    color: #fff;
+    font-family: "Pixelify Sans", monospace;
+    font-size: 11px;
+    padding: 2px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 2;
+  }
+
+  .pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    gap: 8px;
+  }
+
+  .page-label {
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+  }
+
+  /* ---------- buttons & form ---------- */
+  .btn {
+    font-family: "Press Start 2P", monospace;
+    font-size: 11px;
+    color: #fff;
+    background: var(--pink-dark);
+    border: 0;
+    padding: 12px 14px;
+    cursor: pointer;
+    box-shadow:
+      inset -4px -4px 0 rgba(0,0,0,.18),
+      inset 4px 4px 0 rgba(255,255,255,.3),
+      0 4px 0 var(--ink);
+    min-height: 44px;
+  }
+
+  .btn:active { transform: translateY(4px); box-shadow: inset -4px -4px 0 rgba(0,0,0,.18), 0 0 0 var(--ink); }
+  .btn:disabled { opacity: .4; cursor: default; transform: none; }
+  .btn.light { background: #fff; color: var(--pink-dark); }
+
+  .stats {
+    text-align: center;
+    margin: 0 0 16px;
+    font-size: 15px;
+  }
+
+  .fab {
+    position: fixed;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    z-index: 5;
+    font-size: 12px;
+    padding: 16px 20px;
+  }
+  .fab:active { transform: translate(-50%, 4px); }
+
+  /* ---------- dialogs ---------- */
+  dialog {
+    border: 0;
+    padding: 0;
+    width: min(94vw, 400px);
+    background: transparent;
+    color: var(--ink);
+  }
+
+  dialog::backdrop {
+    background: rgba(90, 35, 64, .45);
+  }
+
+  .dialog-inner { padding: 20px 16px; }
+
+  .dialog-title {
+    font-family: "Press Start 2P", monospace;
+    font-size: 12px;
+    margin: 0 0 16px;
+    color: var(--pink-dark);
+    text-align: center;
+  }
+
+  /* ---------- decorations (stickers + text) ---------- */
+  .cq { container-type: inline-size; }
+
+  .deco-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .deco {
+    position: absolute;
+    white-space: nowrap;
+    line-height: 1;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .deco.text {
+    --o: .08em;
+    font-family: "Pixelify Sans", monospace;
+    font-weight: 600;
+    text-shadow:
+      var(--o) 0 0 var(--oc, #fff), calc(var(--o) * -1) 0 0 var(--oc, #fff),
+      0 var(--o) 0 var(--oc, #fff), 0 calc(var(--o) * -1) 0 var(--oc, #fff),
+      var(--o) var(--o) 0 var(--oc, #fff), calc(var(--o) * -1) var(--o) 0 var(--oc, #fff),
+      var(--o) calc(var(--o) * -1) 0 var(--oc, #fff), calc(var(--o) * -1) calc(var(--o) * -1) 0 var(--oc, #fff);
+  }
+
+  .deco.sticker {
+    height: auto;
+    image-rendering: pixelated;
+    -webkit-user-drag: none;
+  }
+
+  .stage {
+    position: relative;
+    container-type: inline-size;
+    width: 62%;
+    margin: 0 auto 14px;
+    aspect-ratio: 55 / 85;
+    background: var(--sleeve);
+    border: var(--px) solid #fff;
+    box-shadow: 4px 4px 0 var(--pink-dark);
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .stage > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .stage .deco-layer { pointer-events: auto; }
+  .stage .deco { cursor: grab; }
+  .stage .deco.selected { outline: 2px dashed var(--pink-dark); outline-offset: 1px; }
+
+  .pick-photo {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: "Pixelify Sans", monospace;
+    font-size: 14px;
+    color: var(--pink-dark);
+  }
+
+  .tools[hidden] { display: none; }
+
+  .tool-label {
+    font-family: "Press Start 2P", monospace;
+    font-size: 9px;
+    margin: 12px 0 6px;
+  }
+
+  .sticker-tray {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+  }
+
+  .sticker-tray button, .mini {
+    font-size: 20px;
+    min-height: 40px;
+    background: #fff;
+    border: 0;
+    box-shadow: inset 0 0 0 2px var(--pink);
+    cursor: pointer;
+    padding: 0;
+    color: var(--ink);
+  }
+
+  .sticker-tray button:active, .mini:active { background: var(--sleeve); }
+
+  .sticker-tray img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    display: block;
+    margin: auto;
+  }
+
+  .text-row { display: flex; gap: 6px; }
+  .text-row input[type="text"] { margin-top: 0; flex: 1; min-width: 0; }
+  .text-row .btn { padding: 10px; }
+
+  .swatches { display: flex; gap: 6px; margin-top: 8px; }
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 2px var(--pink);
+  }
+  .swatch.on { outline: 3px solid var(--ink); }
+
+  .selection-tools {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .mini { font-family: "Press Start 2P", monospace; font-size: 11px; }
+  .mini:disabled { opacity: .35; cursor: default; }
+
+  .hint { font-size: 13px; text-align: center; margin: -6px 0 8px; opacity: .75; }
+
+  label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  input[type="text"] {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    font-family: "Pixelify Sans", monospace;
+    font-size: 16px; /* avoids iOS zoom */
+    color: var(--ink);
+    background: #fff;
+    border: 0;
+    padding: 10px;
+    box-shadow: inset 0 0 0 3px var(--pink);
+    outline: none;
+  }
+
+  input[type="text"]:focus { box-shadow: inset 0 0 0 3px var(--pink-dark); }
+
+  .row { display: flex; gap: 10px; justify-content: center; margin-top: 8px; flex-wrap: wrap; }
+
+  .view-card {
+    position: relative;
+    container-type: inline-size;
+    width: 75%;
+    margin: 0 auto 12px;
+    aspect-ratio: 55 / 85;
+    border: 6px solid #fff;
+    box-shadow: 6px 6px 0 var(--pink-dark);
+    overflow: hidden;
+    background: #fff;
+  }
+  .view-card > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .view-meta { text-align: center; margin: 0 0 4px; font-size: 18px; }
+  .view-sub { text-align: center; margin: 0 0 12px; font-size: 14px; opacity: .75; }
+
+  .toast {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 14px;
+    z-index: 20;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+    display: none;
+  }
+  .toast.show { display: block; }
+
+  @media (min-width: 600px) {
+    h1 { font-size: 24px; }
+    .page { gap: 14px; padding: 16px; }
+    .binder { padding: 20px 20px 20px 40px; }
+    .binder::before { left: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Helena's<br>Collection</h1>
+  <p class="subtitle"><span class="hearts">♥ ♥ ♥</span></p>
+</header>
+
+<main>
+  <p class="stats" id="stats">0 cards collected</p>
+
+  <section class="binder px-box" aria-label="Binder">
+    <div class="page" id="page"></div>
+  </section>
+
+  <nav class="pager">
+    <button class="btn light" id="prev" aria-label="Previous page">◀</button>
+    <span class="page-label" id="pageLabel">PG 1/1</span>
+    <button class="btn light" id="next" aria-label="Next page">▶</button>
+  </nav>
+</main>
+
+<button class="btn fab" id="addBtn">+ ADD CARD</button>
+
+<!-- add dialog -->
+<dialog id="addDialog">
+  <form class="dialog-inner px-box" id="addForm" method="dialog">
+    <h2 class="dialog-title" id="editorTitle">NEW CARD ✦</h2>
+    <div class="stage" id="stage"></div>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+
+    <div class="tools" id="tools" hidden>
+      <p class="hint">drag stickers &amp; text to move them</p>
+      <div class="selection-tools">
+        <button type="button" class="mini" id="shrinkDeco" aria-label="Make smaller">A−</button>
+        <button type="button" class="mini" id="growDeco" aria-label="Make bigger">A+</button>
+        <button type="button" class="mini" id="rotateDeco" aria-label="Rotate">↻</button>
+        <button type="button" class="mini" id="removeDeco" aria-label="Delete selected">✕</button>
+        <button type="button" class="mini" id="changePhoto" aria-label="Change photo">📷</button>
+      </div>
+
+      <p class="tool-label">STICKERS</p>
+      <div class="sticker-tray" id="stickerTray"></div>
+
+      <p class="tool-label">TEXT</p>
+      <div class="text-row">
+        <input type="text" id="decoText" maxlength="24">
+        <button type="button" class="btn" id="addText">ADD</button>
+      </div>
+      <div class="swatches" id="swatches"></div>
+
+      <p class="tool-label">DETAILS</p>
+    </div>
+
+    <label>Name / member
+      <input type="text" id="nameInput" maxlength="40">
+    </label>
+    <label>Group / album
+      <input type="text" id="groupInput" maxlength="40">
+    </label>
+    <div class="row">
+      <button type="button" class="btn light" id="cancelAdd">CANCEL</button>
+      <button type="submit" class="btn" id="saveAdd" disabled>SLEEVE IT</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- view dialog -->
+<dialog id="viewDialog">
+  <div class="dialog-inner px-box">
+    <div class="view-card"><img id="viewImg" alt=""></div>
+    <p class="view-meta" id="viewName"></p>
+    <p class="view-sub" id="viewGroup"></p>
+    <div class="row">
+      <button class="btn light" id="deleteCard">REMOVE</button>
+      <button class="btn light" id="decorateCard">DECORATE</button>
+      <button class="btn" id="closeView">CLOSE</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  const STORAGE_KEY = "photocard-binder:v1";
+  const PER_PAGE = 9;
+
+  const $ = (id) => document.getElementById(id);
+  const pageEl = $("page");
+
+  let cards = load();
+  let currentPage = 0;
+  let viewingId = null;
+
+  function load() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+      return true;
+    } catch {
+      toast("Binder is full! (storage limit reached)");
+      return false;
+    }
+  }
+
+  function toast(msg) {
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => t.classList.remove("show"), 2500);
+  }
+
+  function pageCount() {
+    return Math.max(1, Math.ceil((cards.length + 1) / PER_PAGE));
+  }
+
+  function render() {
+    const pages = pageCount();
+    currentPage = Math.min(currentPage, pages - 1);
+
+    pageEl.innerHTML = "";
+    const start = currentPage * PER_PAGE;
+    for (let i = 0; i < PER_PAGE; i++) {
+      const card = cards[start + i];
+      const slot = document.createElement(card ? "button" : "div");
+      slot.className = "slot" + (card ? " filled" : "");
+      if (card) {
+        const img = document.createElement("img");
+        img.src = card.image;
+        img.alt = card.name || "photocard";
+        slot.appendChild(img);
+        slot.appendChild(decoLayer(card.decos));
+        if (card.name) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = card.name;
+          slot.appendChild(tag);
+        }
+        slot.addEventListener("click", () => openView(card.id));
+      } else {
+        slot.textContent = "♡";
+      }
+      pageEl.appendChild(slot);
+    }
+
+    $("pageLabel").textContent = `PG ${currentPage + 1}/${pages}`;
+    $("prev").disabled = currentPage === 0;
+    $("next").disabled = currentPage >= pages - 1;
+    $("stats").textContent = `${cards.length} card${cards.length === 1 ? "" : "s"} collected ♡`;
+  }
+
+  // Shrink uploads so localStorage doesn't fill up after a handful of cards.
+  function resizeImage(file, maxSide = 480) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = reject;
+        img.onload = () => {
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------- decorations ----------
+  // Positions are % of the card and sizes are in cqw (% of card width),
+  // so the same data renders correctly on the tiny binder slot and the big view.
+  // ---------- pixel stickers ----------
+  // Each sticker is a little pixel grid; every character is one pixel.
+  const PALETTE = {
+    k: "#5a2340", // outline
+    w: "#ffffff",
+    l: "#ffd6e7", // light pink
+    p: "#ff8fb8", // pink
+    P: "#e0578c", // dark pink
+    y: "#ffd75e", // yellow
+    Y: "#f2a33a", // orange
+    r: "#f0525f", // red
+    R: "#b8323d", // dark red
+    G: "#4fa65a", // green
+    b: "#a9dcf5", // light blue
+    v: "#c7b0ff", // lavender
+    V: "#8a6cff", // purple
+    o: "#b07a52", // brown
+    c: "#fff1d6", // cream
+  };
+
+  const HEART = [
+    "..kkk...kkk..",
+    ".kwppk.kpppk.",
+    "kwwpppkppppPk",
+    "kwppppppppPPk",
+    "kppppppppPPPk",
+    ".kppppppPPPk.",
+    "..kppppPPPk..",
+    "...kppPPPk...",
+    "....kpPPk....",
+    ".....kPk.....",
+    "......k......",
+  ];
+  const recolor = (grid, map) => grid.map((row) => row.replace(/./g, (ch) => map[ch] || ch));
+
+  const SPRITES = {
+    heart: HEART,
+    star: [
+      "......k......",
+      ".....kyk.....",
+      ".....kyk.....",
+      "....kywyk....",
+      "kkkkkywyykkkk",
+      "kyyyyyyyyyyYk",
+      ".kyykyyykyYk.",
+      "..kyyyyyyYk..",
+      "..kyyyyyyYk..",
+      ".kyyyykyyYYk.",
+      ".kyyk...kYYk.",
+      "kyk.......kYk",
+      "kk.........kk",
+    ],
+    bow: [
+      "kkk.........kkk",
+      "kwpkk.....kkpPk",
+      "kwpppkkkkkpppPk",
+      "kpppppkPkppppPk",
+      "kppppkPPPkpppPk",
+      "kpppppkPkppppPk",
+      "kpppkkkkkkkppPk",
+      "kPkk..kPk..kkPk",
+      "kk...kPPPk...kk",
+      ".....kk.kk.....",
+    ],
+    strawberry: [
+      "...k.k.k...",
+      "..kGkGkGk..",
+      ".kkGGGGGkk.",
+      "krrkGGGkrrk",
+      "krwrrrrrrRk",
+      "krrrryrrrRk",
+      "kryrrrrryRk",
+      ".krrryrrRk.",
+      ".krrrrrRRk.",
+      "..kryrRRk..",
+      "...krRRk...",
+      "....kkk....",
+    ],
+    bunny: [
+      "..kk.....kk..",
+      ".kwlk...kwlk.",
+      ".kwlk...kwlk.",
+      ".kwlk...kwlk.",
+      ".kwwkkkkkwwk.",
+      "kwwwwwwwwwwwk",
+      "kwwkwwwwwkwwk",
+      "kwwkwwwwwkwwk",
+      "kpwwwwPwwwwpk",
+      "kwwwwkwkwwwwk",
+      ".kwwwwwwwwwk.",
+      "..kkkkkkkkk..",
+    ],
+    cat: [
+      "k...........k",
+      "kk.........kk",
+      "kYk.......kYk",
+      "kYYkkkkkkkYYk",
+      "kYYYYYYYYYYYk",
+      "kYYkYYYYYkYYk",
+      "kYYkYYYYYkYYk",
+      "kpYYYcccYYYpk",
+      "kYYYcckccYYYk",
+      ".kYYYcccYYYk.",
+      "..kkkkkkkkk..",
+    ],
+    bear: [
+      ".kkk.....kkk.",
+      "kocokkkkkocok",
+      "koooooooooook",
+      "kookoooookook",
+      "kookoooookook",
+      "kpooocccooopk",
+      "kooocckccoook",
+      ".kooocccoook.",
+      "..kkkkkkkkk..",
+    ],
+    ghost: [
+      "...kkkkkk...",
+      "..kwwwwwwk..",
+      ".kwwwwwwwwk.",
+      "kwwkwwwwkwwk",
+      "kwwkwwwwkwwk",
+      "kwpwwwwwwpwk",
+      "kwwwwkkwwwwk",
+      "kwwwwwwwwwwk",
+      "kwwwwwwwwwwk",
+      "kwkwwkkwwkwk",
+      "kk.kk..kk.kk",
+    ],
+    butterfly: [
+      "..k.......k..",
+      "...k.....k...",
+      "kkk.k...k.kkk",
+      "kvvk.kkk.kvvk",
+      "kvwvkkvkkvvVk",
+      "kvvvvkvkvvvVk",
+      ".kvvvkvkvvVk.",
+      "..kkkkvkkkk..",
+      ".kvvVkvkvVVk.",
+      ".kvVk.k.kVVk.",
+      "..kk.....kk..",
+    ],
+    cloud: [
+      ".....kkkk.....",
+      "....kwwwwk....",
+      "..kkwwwwwwkk..",
+      ".kwwwwwwwwwwk.",
+      "kwwkwwwwwwkwwk",
+      "kwwkwwwwwwkwwk",
+      "kwpwwwkkwwwpwk",
+      "kwwwwwwwwwwwbk",
+      ".kbbbbbbbbbbk.",
+      "..kkkkkkkkkk..",
+    ],
+    sparkle: [
+      "....k....",
+      "...kyk...",
+      "...kyk...",
+      "..kywyk..",
+      "kyywwwyyk",
+      "..kywyk..",
+      "...kyk...",
+      "...kyk...",
+      "....k....",
+    ],
+    cherry: [
+      ".......GG..",
+      ".....GGG...",
+      "....G..G...",
+      "...G....G..",
+      "..G.....G..",
+      ".kkk...kkk.",
+      "krwrk.krwrk",
+      "krrrk.krrrk",
+      "krrRk.krrRk",
+      ".kkk...kkk.",
+    ],
+    crown: [
+      "k.....k.....k",
+      "kk...kyk...kk",
+      "kyk..kyk..kyk",
+      "kyyk.kyk.kyyk",
+      "kyyykyyykyyyk",
+      "kyyyyyyyyyyYk",
+      "kyyryybyypyYk",
+      "kyyyyyyyyyyYk",
+      "kkkkkkkkkkkkk",
+    ],
+    rainbow: [
+      "....kkkkkkk....",
+      "..kkrrrrrrrkk..",
+      ".krrYYYYYYYrrk.",
+      "krYYyyyyyyyYYrk",
+      "krYyykkkkkyyYrk",
+      "krYyk.....kyYrk",
+      "kwwwk.....kwwwk",
+      "kwwwwk...kwwwwk",
+      ".kkkk.....kkkk.",
+    ],
+    flower: [
+      "...kkkkk...",
+      "..kpppppk..",
+      ".kkkpppkkk.",
+      "kpppkkkpppk",
+      "kppkyyykppk",
+      "kppkyYykppk",
+      "kpppkkkpppk",
+      ".kkkpppkkk.",
+      "...kpppk...",
+      "....kGk....",
+      "..kGGGGGk..",
+      "...kkGkk...",
+    ],
+    letter: [
+      "kkkkkkkkkkkkk",
+      "kklllllllllkk",
+      "klklllllllklk",
+      "kllklllllkllk",
+      "klllkpPpklllk",
+      "kllllkPkllllk",
+      "klllllklllllk",
+      "klllllllllllk",
+      "kkkkkkkkkkkkk",
+    ],
+    heartPurple: recolor(HEART, { p: "v", P: "V" }),
+    heartBlue: recolor(HEART, { p: "b", P: "B" }),
+  };
+  PALETTE.B = "#5aaee0";
+
+  const spriteCache = {};
+  function spriteUrl(name) {
+    if (spriteCache[name]) return spriteCache[name];
+    const grid = SPRITES[name];
+    if (!grid) return "";
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(...grid.map((r) => r.length));
+    canvas.height = grid.length;
+    const ctx = canvas.getContext("2d");
+    grid.forEach((row, y) => {
+      [...row].forEach((ch, x) => {
+        if (!PALETTE[ch]) return;
+        ctx.fillStyle = PALETTE[ch];
+        ctx.fillRect(x, y, 1, 1);
+      });
+    });
+    return (spriteCache[name] = canvas.toDataURL());
+  }
+
+  function applyDeco(el, d) {
+    el.style.left = d.x + "%";
+    el.style.top = d.y + "%";
+    el.style.transform = `translate(-50%, -50%) rotate(${d.rot}deg)`;
+    if (d.sprite) {
+      el.style.width = d.size + "cqw";
+    } else {
+      el.style.fontSize = d.size + "cqw";
+    }
+    if (d.color) el.style.color = d.color;
+    // white text gets a dark outline so it stays readable
+    if (d.type === "text") el.style.setProperty("--oc", d.color === "#ffffff" ? "#5a2340" : "#fff");
+  }
+
+  function decoLayer(decos = []) {
+    const layer = document.createElement("div");
+    layer.className = "deco-layer";
+    decos.forEach((d, i) => {
+      let el;
+      if (d.sprite) {
+        el = document.createElement("img");
+        el.src = spriteUrl(d.sprite);
+        el.alt = "";
+        el.draggable = false;
+      } else {
+        el = document.createElement("span");
+        el.textContent = d.content;
+      }
+      el.className = "deco " + d.type;
+      el.dataset.index = i;
+      applyDeco(el, d);
+      layer.appendChild(el);
+    });
+    return layer;
+  }
+
+  // ---------- editor (new card + decorate) ----------
+  const COLORS = ["#e0578c", "#5a2340", "#ff8fb8", "#ffffff", "#8a6cff", "#3fa7d6", "#f2a33a"];
+  const editor = { image: null, decos: [], editingId: null, selected: -1 };
+  let textColor = COLORS[0];
+
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+  function openEditor(card = null) {
+    $("addForm").reset();
+    editor.editingId = card ? card.id : null;
+    editor.image = card ? card.image : null;
+    editor.decos = card ? structuredClone(card.decos || []) : [];
+    editor.selected = -1;
+    $("nameInput").value = card?.name || "";
+    $("groupInput").value = card?.group || "";
+    $("editorTitle").textContent = card ? "DECORATE ✦" : "NEW CARD ✦";
+    $("saveAdd").textContent = card ? "SAVE" : "SLEEVE IT";
+    renderStage();
+    $("addDialog").showModal();
+  }
+
+  function renderStage() {
+    const stage = $("stage");
+    stage.innerHTML = "";
+    $("tools").hidden = !editor.image;
+    $("saveAdd").disabled = !editor.image;
+
+    if (!editor.image) {
+      const pick = document.createElement("button");
+      pick.type = "button";
+      pick.className = "pick-photo";
+      pick.innerHTML = "tap to pick<br>a photo ♡";
+      pick.addEventListener("click", () => $("fileInput").click());
+      stage.appendChild(pick);
+      return;
+    }
+
+    const img = document.createElement("img");
+    img.src = editor.image;
+    img.alt = "card preview";
+    stage.appendChild(img);
+
+    const layer = decoLayer(editor.decos);
+    const selected = layer.children[editor.selected];
+    if (selected) selected.classList.add("selected");
+    stage.appendChild(layer);
+
+    for (const id of ["shrinkDeco", "growDeco", "rotateDeco", "removeDeco"]) {
+      $(id).disabled = !selected;
+    }
+  }
+
+  function addDeco(d) {
+    editor.decos.push({ x: 50, y: 50, rot: 0, ...d });
+    editor.selected = editor.decos.length - 1;
+    renderStage();
+  }
+
+  function tweakSelected(fn) {
+    const d = editor.decos[editor.selected];
+    if (!d) return;
+    fn(d);
+    renderStage();
+  }
+
+  for (const name of Object.keys(SPRITES)) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", "Add " + name + " sticker");
+    const img = document.createElement("img");
+    img.src = spriteUrl(name);
+    img.alt = "";
+    b.appendChild(img);
+    b.addEventListener("click", () => addDeco({ type: "sticker", sprite: name, size: 26 }));
+    $("stickerTray").appendChild(b);
+  }
+
+  for (const c of COLORS) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "swatch" + (c === textColor ? " on" : "");
+    b.style.background = c;
+    b.setAttribute("aria-label", "Text color " + c);
+    b.addEventListener("click", () => {
+      textColor = c;
+      for (const s of $("swatches").children) s.classList.toggle("on", s === b);
+      // recolor the selected text too
+      const d = editor.decos[editor.selected];
+      if (d && d.type === "text") tweakSelected((t) => { t.color = c; });
+    });
+    $("swatches").appendChild(b);
+  }
+
+  function addTextDeco() {
+    const text = $("decoText").value.trim();
+    if (!text) return;
+    addDeco({ type: "text", content: text, size: 12, color: textColor });
+    $("decoText").value = "";
+  }
+
+  $("addText").addEventListener("click", addTextDeco);
+  $("decoText").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); addTextDeco(); }
+  });
+
+  $("shrinkDeco").addEventListener("click", () => tweakSelected((d) => { d.size = Math.max(4, d.size * 0.85); }));
+  $("growDeco").addEventListener("click", () => tweakSelected((d) => { d.size = Math.min(90, d.size * 1.15); }));
+  $("rotateDeco").addEventListener("click", () => tweakSelected((d) => { d.rot = (d.rot + 15) % 360; }));
+  $("removeDeco").addEventListener("click", () => {
+    editor.decos.splice(editor.selected, 1);
+    editor.selected = -1;
+    renderStage();
+  });
+  $("changePhoto").addEventListener("click", () => $("fileInput").click());
+
+  // dragging stickers / text around the card
+  let drag = null;
+  const stageEl = $("stage");
+
+  stageEl.addEventListener("pointerdown", (e) => {
+    const el = e.target.closest(".deco");
+    if (!el) {
+      if (editor.selected !== -1) { editor.selected = -1; renderStage(); }
+      return;
+    }
+    e.preventDefault();
+    const i = Number(el.dataset.index);
+    if (editor.selected !== i) { editor.selected = i; renderStage(); }
+    const d = editor.decos[i];
+    drag = {
+      el: stageEl.querySelector(`.deco[data-index="${i}"]`),
+      d,
+      rect: stageEl.getBoundingClientRect(),
+      startX: e.clientX,
+      startY: e.clientY,
+      x0: d.x,
+      y0: d.y,
+    };
+    stageEl.setPointerCapture(e.pointerId);
+  });
+
+  stageEl.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const { d, rect } = drag;
+    d.x = clamp(drag.x0 + ((e.clientX - drag.startX) / rect.width) * 100, 0, 100);
+    d.y = clamp(drag.y0 + ((e.clientY - drag.startY) / rect.height) * 100, 0, 100);
+    applyDeco(drag.el, d);
+  });
+
+  stageEl.addEventListener("pointerup", () => { drag = null; });
+  stageEl.addEventListener("pointercancel", () => { drag = null; });
+
+  $("addBtn").addEventListener("click", () => openEditor());
+  $("cancelAdd").addEventListener("click", () => $("addDialog").close());
+
+  $("fileInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      editor.image = await resizeImage(file);
+      renderStage();
+    } catch {
+      toast("Couldn't read that image :(");
+    }
+  });
+
+  $("addForm").addEventListener("submit", (e) => {
+    if (!editor.image) { e.preventDefault(); return; }
+    const fields = {
+      image: editor.image,
+      decos: editor.decos,
+      name: $("nameInput").value.trim(),
+      group: $("groupInput").value.trim(),
+    };
+    const before = cards;
+    if (editor.editingId) {
+      cards = cards.map((c) => (c.id === editor.editingId ? { ...c, ...fields } : c));
+    } else {
+      cards = [...cards, {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        ...fields,
+        addedAt: new Date().toISOString(),
+      }];
+    }
+    if (!save()) {
+      cards = before;
+      e.preventDefault();
+      return;
+    }
+    if (!editor.editingId) currentPage = Math.floor((cards.length - 1) / PER_PAGE);
+    render();
+    toast(editor.editingId ? "Card updated! ✦" : "Card sleeved! ✦");
+  });
+
+  // ---------- view / delete ----------
+  function openView(id) {
+    const card = cards.find((c) => c.id === id);
+    if (!card) return;
+    viewingId = id;
+    $("viewImg").src = card.image;
+    $("viewImg").alt = card.name || "photocard";
+    $("viewName").textContent = card.name || "♡ mystery card ♡";
+    $("viewGroup").textContent = card.group || "";
+    const viewCard = $("viewImg").parentElement;
+    viewCard.querySelector(".deco-layer")?.remove();
+    viewCard.appendChild(decoLayer(card.decos));
+    $("viewDialog").showModal();
+  }
+
+  $("closeView").addEventListener("click", () => $("viewDialog").close());
+
+  $("decorateCard").addEventListener("click", () => {
+    const card = cards.find((c) => c.id === viewingId);
+    $("viewDialog").close();
+    if (card) openEditor(card);
+  });
+
+  $("deleteCard").addEventListener("click", () => {
+    if (!confirm("Remove this card from your binder?")) return;
+    cards = cards.filter((c) => c.id !== viewingId);
+    save();
+    $("viewDialog").close();
+    render();
+  });
+
+  // close the viewer by tapping the backdrop (not the editor, so a drag
+  // that ends off the card doesn't throw away your decorating)
+  $("viewDialog").addEventListener("click", (e) => {
+    if (e.target === $("viewDialog")) $("viewDialog").close();
+  });
+
+  // ---------- paging ----------
+  $("prev").addEventListener("click", () => { currentPage--; render(); });
+  $("next").addEventListener("click", () => { currentPage++; render(); });
+
+  // swipe between pages on mobile
+  let touchX = null;
+  pageEl.addEventListener("touchstart", (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+  pageEl.addEventListener("touchend", (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    touchX = null;
+    if (Math.abs(dx) < 50) return;
+    if (dx < 0 && currentPage < pageCount() - 1) currentPage++;
+    else if (dx > 0 && currentPage > 0) currentPage--;
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
